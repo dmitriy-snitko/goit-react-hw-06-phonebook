@@ -1,15 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { deleteContact } from '../../redux/contacts/contacts-actions';
+
 import PropTypes from 'prop-types'
 import { List, Item } from '../ContactsList/ContactsList.styles';
 
-const ContactsList = ({ filtredContacts, deleteContact }) => {
+const ContactsList = ({ filtredContacts, onDeleteContact }) => {
   return (
     <List>
       {filtredContacts().map(cont => {
         return (
           <Item key={cont.id}>
             <p>{`${cont.name}: ${cont.number}`}</p>
-            <button onClick={() => deleteContact(cont.id)}>Delete</button>
+            <button onClick={() => onDeleteContact(cont.id)}>Delete</button>
           </Item>
         )
       })}
@@ -17,9 +20,12 @@ const ContactsList = ({ filtredContacts, deleteContact }) => {
   )
 };
 
+const mapDispatchToProps = dispatch => ({
+  deleteContact: id => dispatch(deleteContact(id)),
+})
+
 ContactsList.propTypes = {
   filtredContacts: PropTypes.func.isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
 
-export default ContactsList;
+export default connect(null, mapDispatchToProps)(ContactsList);
