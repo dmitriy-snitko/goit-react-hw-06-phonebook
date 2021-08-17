@@ -21,7 +21,7 @@ const ContactsList = ({ filtredContacts, onDeleteContact }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  deleteContact: id => dispatch(deleteContact(id)),
+  onDeleteContact: id => dispatch(deleteContact(id)),
 })
 
 ContactsList.propTypes = {
