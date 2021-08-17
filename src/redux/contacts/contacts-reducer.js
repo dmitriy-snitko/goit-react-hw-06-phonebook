@@ -19,8 +19,8 @@ const items = (state = (JSON.parse(localStorage.getItem('contacts')) ?? []), {ty
       };
 
       return [
-        ...state,
         newContact,
+        ...state,
       ];
 
     case types.DELETE:
