@@ -1,57 +1,39 @@
-import { createStore, combineReducers } from "redux";
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {
+  configureStore,
+  getDefaultMiddleware,
+} from '@reduxjs/toolkit';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import contactsReducer from "./contacts/contacts-reducer";
-// import types from './contacts/contacts-types';
-// import shortid from 'shortid';
 
-// const initialState = {
-//     items: (JSON.parse(localStorage.getItem('contacts')) ?? []),
-//     filter: ''
-// };
+const contactsPersistConfig = {
+  key: 'contacts',
+  storage,
+  blacklist: ['filter'],
+};
 
-// const reducer = (state = initialState, {type, payload}) => {
-//   switch (type) {
-//     case types.DELETE:
-//       return {
-//           ...state,
-//           items: state.items.filter(contact => contact.id !== payload)
-//       }
-    
-//     case types.ADD:
-//       const normalizedName = payload.name.toLowerCase();
-//       const isAlreadyinContacts = state.items.find(el => el.name.toLowerCase() === normalizedName);
-//       const newContact = {
-//         id: shortid.generate(),
-//         name: payload.name,
-//         number: payload.number
-//       };
+const store = configureStore({
+  reducer: {
+    contacts: persistReducer(contactsPersistConfig, contactsReducer),
+  },
+   middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
+  devTools: process.env.NODE_ENV === 'development',
+});
 
-//       if (isAlreadyinContacts) {
-//         alert(`${payload.name} is already in contacts!`);
-//         return state;
-//       };
+const persistor = persistStore(store);
 
-//       return {
-//           ...state,
-//           items: [newContact, ...state.items]
-//       };
-    
-//     case types.CHANGE_FILTER:
-//       return {
-//           ...state,
-//           filter: payload,
-//       }
-
-//     default:
-//       return state;
-//   };
-// }
-
-const rootReducer = combineReducers({
-  contacts: contactsReducer,
-  // contacts: reducer,
-})
-
-const store = createStore(rootReducer, composeWithDevTools());
-
-export default store;
+// eslint-disable-next-line import/no-anonymous-default-export
+export default { store, persistor };

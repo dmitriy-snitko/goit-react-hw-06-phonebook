@@ -1,48 +1,37 @@
 import { combineReducers } from "redux";
-import types from './contacts-types';
-import shortid from 'shortid';
+import { createReducer } from '@reduxjs/toolkit';
+import * as actions from '../contacts/contacts-actions';
 
-const items = (state = (JSON.parse(localStorage.getItem('contacts')) ?? []), {type, payload}) => {
-  switch (type) {
-    case types.ADD:
-      const normalizedName = payload.name.toLowerCase();
-      const isAlreadyinContacts = state.find(el => el.name.toLowerCase() === normalizedName);
-      const newContact = {
-        id: shortid.generate(),
-        name: payload.name,
-        number: payload.number
-      };
+const items = createReducer([], {
+  [actions.addContact]: (state, { payload }) => addContact(state, payload),
 
-      if (isAlreadyinContacts) {
-        alert(`${payload.name} is already in contacts!`);
-        return state;
-      };
+  [actions.deleteContact]: (state, { payload }) =>
+    state.filter(({ id }) => id !== payload),
+});
 
-      return [
-        newContact,
-        ...state,
-      ];
+const filter = createReducer('', {
+  [actions.changeFilter]: (_, { payload }) => payload,
+});
 
-    case types.DELETE:
-      return (
-        state.filter(contact => contact.id !== payload)
-      );
+const addContact = (state, payload) => {
+  const normalizedName = payload.name.toLowerCase();
+  const isAlreadyinContacts = state.find(el => el.name.toLowerCase() === normalizedName);
 
-    default:
-      return state;
+  if (isAlreadyinContacts) {
+    alert(`${payload.name} is already in contacts!`);
+    return state;
   };
-};
 
-const filter = (state = '', {type, payload}) => {
-  switch (type) {
-    case types.CHANGE_FILTER:
-      return {
-        state: payload,
-      }
-
-    default:
-      return state;
+  const newContact = {
+    id: payload.id,
+    name: payload.name,
+    number: payload.number
   };
+
+  return [
+    newContact,
+    ...state,
+  ];
 };
 
 export default combineReducers({
