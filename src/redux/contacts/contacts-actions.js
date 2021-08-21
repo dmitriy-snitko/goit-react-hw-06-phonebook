@@ -11,4 +11,11 @@ export const addContact = createAction('contacts/add', (name, number) => ({
 
 export const deleteContact = createAction('contacts/delete');
 
-export const changeFilter = createAction('contacts/changeFilter');
+export const changeFilter = createAction('contacts/changeFilter', filterValue => ({
+  payload: filterValue,
+  meta: {
+    debounce: {
+      time: 300,
+    }
+  }
+}));

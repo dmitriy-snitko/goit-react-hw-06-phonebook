@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import * as actions from './redux/contacts/contacts-actions';
-import ContactForm from './components/ContactForm/ContactForm';
-import ContactsList from './components/ContactsList/ContactsList';
-import Filter from './components/Filter/Filter';
+import ContactForm from './components/ContactForm';
+import ContactsList from './components/ContactsList';
+import Filter from './components/Filter';
 import { Container, Title } from './App.styles.jsx';
 
 function App() {

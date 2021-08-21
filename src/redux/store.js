@@ -14,6 +14,16 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import contactsReducer from "./contacts/contacts-reducer";
+import createDebounce from 'redux-debounced';
+
+const middleware = [
+  ...getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
+  createDebounce()
+];
 
 const contactsPersistConfig = {
   key: 'contacts',
@@ -25,11 +35,7 @@ const store = configureStore({
   reducer: {
     contacts: persistReducer(contactsPersistConfig, contactsReducer),
   },
-   middleware: getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
+  middleware,
   devTools: process.env.NODE_ENV === 'development',
 });
 
