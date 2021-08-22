@@ -11,8 +11,8 @@ export const addContact = createAction('contacts/add', (name, number) => ({
 
 export const deleteContact = createAction('contacts/delete');
 
-export const changeFilter = createAction('contacts/changeFilter', filterValue => ({
-  payload: filterValue,
+export const changeFilter = createAction('contacts/changeFilter', payload => ({
+  payload,
   meta: {
     debounce: {
       time: 300,
